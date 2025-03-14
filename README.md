@@ -1,0 +1,1 @@
+# projeto-visao-computacional-2025.1
