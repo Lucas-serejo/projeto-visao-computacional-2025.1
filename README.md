@@ -7,6 +7,7 @@ Repositório contendo as atividades de avaliação referentes à disciplina de V
 
 | Nome | Matrícula | LinkedIn |
 |------|-----------|----------|
+| **Ana Beatriz Machado Lessa** | 202108004171 |
 | **Beatriz Turi Pinto de Araujo** | 202203795211 |
 | **Lucas Fernandes Mosqueira** | 202203369016 |
 | **Lucas José Silva Serejo** | 202202714356 |
