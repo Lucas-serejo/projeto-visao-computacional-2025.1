@@ -32,3 +32,29 @@ plt.title("Detalhes Reforçados")
 plt.imshow(laplaciano, cmap="gray")
 
 plt.show()
+
+# Função para aplicar o filtro de Sharpening
+def sharpening(imagem):
+    # Aplicar um filtro Gaussiano para suavizar
+    suavizada = cv2.GaussianBlur(imagem, (9, 9), 0)
+
+    # Subtrair a imagem suavizada da original para realçar os detalhes
+    detalhes = cv2.subtract(imagem, suavizada)
+
+    # Aplicar um filtro Laplaciano para reforçar os detalhes
+    laplaciano = cv2.Laplacian(detalhes, cv2.CV_64F)
+
+    # Converter para escala de 8 bits
+    laplaciano = cv2.convertScaleAbs(laplaciano)
+
+    return laplaciano
+
+# Função para mostrar os detalhes de uma imagem
+def showDetails(imagem):
+    # Aplicar um filtro Gaussiano para suavizar
+    suavizada = cv2.GaussianBlur(imagem, (9, 9), 0)
+
+    # Subtrair a imagem suavizada da original para realçar os detalhes
+    detalhes = cv2.subtract(imagem, suavizada)
+
+    return detalhes
