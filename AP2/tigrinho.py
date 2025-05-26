@@ -6,7 +6,7 @@ from ultralytics import YOLO
 # CONFIGURAÇÕES
 # =============================
 
-model = YOLO('caminho/para/o modelo')  # seu modelo YOLOv8 treinado
+model = YOLO(r'caminho/para/modelo')  # seu modelo YOLOv8 treinado
 
 card_values = {
     '2': 1, '3': 1, '4': 1, '5': 1, '6': 1,
@@ -15,7 +15,7 @@ card_values = {
 }
 
 card_count = 0
-last_detected_cards = {}  # {card_number: last_time_detected}
+last_detected_cards = {}  # {label: last_time_detected}
 detection_delay = 3  # segundos
 CONFIDENCE_THRESHOLD = 0.5
 
@@ -36,28 +36,32 @@ def detect_card_yolo(frame):
 
         cls_id = int(box.cls[0])
         label = model.names[cls_id]  # Ex: '10H', 'AD'
-        card_number = label[:-1]
+        card_number = label[:-1]    # Extrai '10' de '10H', 'A' de 'AD'
 
         if card_number not in card_values:
             continue
 
-        # Prevenir múltiplas contagens da mesma carta em sequência
-        last_time = last_detected_cards.get(card_number, 0)
-        if (current_time - last_time) < detection_delay:
-            continue
+        # Obter o tempo da última contagem para esta carta específica (pelo label completo)
+        last_time_this_card_was_counted = last_detected_cards.get(label, 0)
 
-        card_count += card_values[card_number]
-        last_detected_cards[card_number] = current_time
-
-        # Desenhar caixa e texto
+        # Desenhar caixa e texto para TODAS as detecções acima do threshold
         x1, y1, x2, y2 = map(int, box.xyxy[0])
         cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
-        cv2.putText(frame, f'{label} ({conf:.2f})', (x1, y1 - 10),
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 255, 0), 2)
+        
+        value_for_display = card_values.get(card_number, "N/A")
+        
+        display_text = f'{label} [Valor: {value_for_display}] ({conf:.2f})'
+        cv2.putText(frame, display_text, (x1, y1 - 10),
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 2)
 
-        # (Opcional) Salvar imagem da carta detectada
-        # card_crop = frame[y1:y2, x1:x2]
-        # cv2.imwrite(f'detected_{label}_{int(current_time)}.jpg', card_crop)
+        # Lógica de contagem com o delay
+        if (current_time - last_time_this_card_was_counted) < detection_delay:
+            # Se foi contada recentemente, não a conte novamente, mas já foi desenhada.
+            continue
+
+        # Se passou pelo delay, então conte e atualize o tempo.
+        card_count += card_values[card_number]
+        last_detected_cards[label] = current_time # Usar 'label' para tratar cada carta (naipe e valor) unicamente no delay
 
     return frame
 
@@ -66,11 +70,16 @@ def detect_card_yolo(frame):
 # =============================
 
 def main():
-    cap = cv2.VideoCapture(0)
+    cap = cv2.VideoCapture(0) # Ou o caminho para um vídeo
+
+    if not cap.isOpened():
+        print("Erro ao abrir a câmera ou vídeo.")
+        return
 
     while True:
         ret, frame = cap.read()
         if not ret:
+            print("Erro ao ler o frame ou fim do vídeo.")
             break
 
         frame = detect_card_yolo(frame)
@@ -81,7 +90,7 @@ def main():
         elif card_count < 0:
             color = (0, 0, 255)  # vermelho
         else:
-            color = (255, 255, 0)  # azul
+            color = (255, 255, 0)  # ciano/azul claro para neutro
 
         cv2.putText(frame, f"Card Count: {card_count}", (10, 30),
                     cv2.FONT_HERSHEY_SIMPLEX, 1, color, 2)
