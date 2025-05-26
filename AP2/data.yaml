@@ -1,5 +1,5 @@
-train: C:/Projetos/projeto-visao-computacional-2025.1/AP2/playing_cards_yolo.yolov8/train/images
-val: C:/Projetos/projeto-visao-computacional-2025.1/AP2/playing_cards_yolo.yolov8/valid/images
+train: E:\GitHub\Ecommerce-Professor-Java\projeto-visao-computacional-2025.1\Playing Cards.v4-fastmodel-resized640-aug3x.yolov8\train\images
+val: E:\GitHub\Ecommerce-Professor-Java\projeto-visao-computacional-2025.1\Playing Cards.v4-fastmodel-resized640-aug3x.yolov8\valid\images
 
 nc: 52
 names: ['2C', '2D', '2H', '2S',
