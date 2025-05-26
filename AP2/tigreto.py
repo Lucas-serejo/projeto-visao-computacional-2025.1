@@ -6,7 +6,7 @@ from ultralytics import YOLO
 # CONFIGURAÇÕES
 # =============================
 
-model = YOLO('E:\GitHub\Ecommerce-Professor-Java\projeto-visao-computacional-2025.1\runs\detect\train\weights\best.pt')  # seu modelo YOLOv8 treinado
+model = YOLO('caminho/para/o modelo')  # seu modelo YOLOv8 treinado
 
 card_values = {
     '2': 1, '3': 1, '4': 1, '5': 1, '6': 1,
