@@ -6,7 +6,7 @@ from ultralytics import YOLO
 # CONFIGURAÇÕES
 # =============================
 
-model = YOLO(r'caminho/para/modelo')  # seu modelo YOLOv8 treinado
+model = YOLO(r'best.pt')  # seu modelo YOLOv8 treinado
 
 card_values = {
     '2': 1, '3': 1, '4': 1, '5': 1, '6': 1,
